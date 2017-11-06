@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/main">
+<head>
+<title>Candidates</title>
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+</head>
+<body>
+	<div layout:fragment="content">
+		<section class="content-header">
+			<h1>Candidatos</h1>
+			<ol class="breadcrumb">
+				<li><a th:href="@{/}"><i class="fa fa-dashboard"></i> Home</a></li>
+				<li class="active">Candidatos</li>
+			</ol>
+		</section>
+
+		<div class="box">
+			<div class="box-header">
+				<h3 class="box-title">Listado</h3>
+				<a class="btn btn-default pull-right"
+					th:href="@{/candidates/create}"> <i class="ion-ios-plus"></i>
+					Nuevo
+				</a>
+			</div>
+			<!-- /.box-header -->
+			<div class="box-body">
+				Show <span sd:page-size-selector="javascript"></span> entries
+				<table id="data-table" class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th>id</th>
+							<th th:text="#{candidate.nombre}">-Nombre-</th>
+							<th>Aplica para</th>
+							<th>Fecha Alta</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+
+
+						<tr th:each="candidate : ${candidates}"
+							th:attr="data-id=${candidate.id}">
+							<td><a th:href="@{/candidates/edit/__${candidate.id}__}"
+								th:text="${candidate.id}"> </a></td>
+							<td th:text="${candidate.name}"></td>
+							<td th:text="${candidate.positionApplied}"></td>
+							<td
+								th:text="${#dates.format(candidate.createdAt, 'dd-MMM-yyyy HH:ss')}">Agregado
+								el</td>
+							<!-- <td>
+                                    <a href="#" target="_blank">Descargar
+                                        <i class="ion-archive"></i></a>
+                                    </td> -->
+							<td><a href="#" data-toggle="modal" data-target="#myModal"><i
+									class="ion-android-delete"></i></a> <a
+								th:href="@{/candidates/cv/__${candidate.id}__}" target="_blank"
+								th:if="${candidate.cvMimeType}" style="margin-left: 10px"><i
+									class="ion-archive"></i> </a></td>
+						</tr>
+
+
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>Id</th>
+							<th class="sorted" sd:pagination-sort="name">Nombre</th>
+							<th>Aplica para</th>
+							<th>Fecha Alta</th>
+							<th></th>
+						</tr>
+					</tfoot>
+				</table>
+
+				<div class="row">
+					<div class="col-sm-5">
+						<div class="pagination">
+							<p>
+								Mostrando <span class="badge"
+									th:text="${page.size * (page.number-1) + 1}"></span> de <span
+									class="badge"
+									th:text="${page.lastPage ? page.totalElements : page.size * (page.number-1)+ page.size}"></span>
+								de <span class="badge" th:text="${page.totalElements}"></span>
+								Candidatos
+							</p>
+						</div>
+					</div>
+
+					<div class="col-sm-7">
+						Pagination Bar
+						<div th:fragment='paginationbar'>
+							<div class="text-center">
+								<ul class='pagination pagination-centered'>
+									<li th:class="${page.firstPage}?'disabled':''"><span
+										th:if='${page.firstPage}'>← First</span> <a
+										th:if='${not page.firstPage}'
+										th:href='@{${page.url}(page=0,size=${page.size})}'>← First</a>
+									</li>
+									<li th:class="${page.hasPreviousPage}? '' : 'disabled'"><span
+										th:if='${not page.hasPreviousPage}'>«</span> <a
+										th:if='${page.hasPreviousPage}'
+										th:href='@{${page.url}(page=${page.number-2},size=${page.size})}'
+										title='Go to previous page'>«</a></li>
+									<li th:each='item : ${page.items}'
+										th:class="${item.current}? 'active' : ''"><span
+										th:if='${item.current}' th:text='${item.number}'>1</span> <a
+										th:if='${not item.current}'
+										th:href='@{${page.url}(page=${item.number-1},size=${page.size})}'><span
+											th:text='${item.number}'>1</span></a></li>
+									<li th:class="${page.hasNextPage}? '' : 'disabled'"><span
+										th:if='${not page.hasNextPage}'>»</span> <a
+										th:if='${page.hasNextPage}'
+										th:href='@{${page.url}(page=${page.number},size=${page.size})}'
+										title='Go to next page'>»</a></li>
+									<li th:class="${page.lastPage}? 'disabled' : ''"><span
+										th:if='${page.lastPage}'>Last →</span> <a
+										th:if='${not page.lastPage}'
+										th:href='@{${page.url}(page=${page.totalPages - 1},size=${page.size})}'>Last
+											→</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">Eliminar candidato</h4>
+					</div>
+					<div class="modal-body">
+						<p>
+							Eliminar candidato <label id="lblNombreCandidato"></label>
+						</p>
+					</div>
+
+					<input type="hidden" value="coso" id="hdnID" />
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+						<button onclick="alerta();" type="submit" class="btn btn-primary">Eliminar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /.box-body -->
+
+
+
+
+	<th:block layout:fragment="scripts">
+
+
+
+
+		<!-- 		<link rel="stylesheet" -->
+		<!-- 			th:href="@{/resources/datatables.net-bs/css/dataTables.bootstrap.min.css}" /> -->
+		<!-- DataTables -->
+		<script
+			th:src="@{/resources/datatables.net/js/jquery.dataTables.min.js}"></script>
+
+
+		<!-- SlimScroll -->
+		<!-- 		<script -->
+		<!-- 			th:src="@{/resources/jquery-slimscroll/jquery.slimscroll.min.js}"></script> -->
+
+		<script th:src="@{/js/jquery.spring-friendly.min.js}"></script>
+
+
+		<!-- 		<script -->
+		<!-- 			th:src="@{/resources/datatables.net-bs/js/dataTables.bootstrap.min.js}"></script> -->
+
+
+		<!-- FastClick -->
+		<script th:src="@{/resources/fastclick/lib/fastclick.js}"></script>
+
+
+
+		<script th:inline="javascript">
+			var candidatos = [[${candidates}]];
+		
+			var table;
+			var token = $("meta[name='_csrf']").attr("content");
+			  var header = $("meta[name='_csrf_header']").attr("content");
+			$(function() {
+		
+				 
+				
+				table = $('#data-table').DataTable({
+					bPaginate: false,
+					searching: false,
+					bSort: false,
+					info: false,
+				});
+		
+
+
+				$('#data-table tbody').on('click', 'tr', function() {
+					if($(this).hasClass('selected')){
+			            $(this).removeClass('selected');
+			        }
+			        else {
+			            table.$('tr.selected').removeClass('selected');
+			            $(this).addClass('selected');
+			        }
+					
+					 
+					 var id = $(this).closest("tr").data("id");
+		
+					var data = table.row(this).data();
+					$("#lblNombreCandidato").text(data[1]);
+					$("#hdnID").val(id);
+					
+					
+					/* alert( 'You clicked on '+data[0]+'\'s row' ); */
+				});
+		
+				
+				
+				
+//		 		table = $('#data-table').DataTable({
+//		 			 columns : [
+//		 				{data : 'id'},
+//		 				{data : 'name'},
+//		 				{data : 'positionApplied'},
+//		 				{data : 'createdAt'}
+//		 				],
+//		 	        'serverSide' : true,
+//		 			'ajax' : {
+//		 				url:'/candidates/list',
+//		 				type: 'GET',
+//		 				success: function(data) {
+//		 					response = JSON.parse(data);
+//		 					alert("XD");
+//		 				}
+//		 			},
+//		 		});
+			});
+			
+			function alerta(){
+				deleteCandidate();
+			}
+			
+			function deleteCandidate(){
+				
+// 				var requestData[_csrf_param_name] = token;
+				
+				var id = $("#hdnID").val();
+				$.ajaxSetup({
+		            headers:
+		            { 'X-CSRF-TOKEN': token }
+		        });
+				
+			    $.ajax({
+			        type: "DELETE",
+			        url: "/candidates/delete/"+id,
+			        headers: {"Authorization": token + ""},
+			        success: function(result){
+			                //here you check the response from your controller and add your business logic
+			        		table.row('.selected').remove().draw(false);
+			            	$("#myModal .close").click();
+			        },
+		            error: function(request,msg,error) {
+		                // handle failure
+		                alert(error);
+		            }
+			    });
+			}
+			
+			
+			
+</script>
+	</th:block>
+</body>
+</html>

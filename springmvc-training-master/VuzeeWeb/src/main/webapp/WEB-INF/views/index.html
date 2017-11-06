@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/main">
+<head>
+<title>Home</title>
+</head>
+<body ng-app="myApp">
+	<div layout:fragment="content"
+		ng-controller="DashBoardController as ctrl">
+		<h1>Este es el dashboard</h1>
+		<div class="row">
+			<ul class="thumbnails list-unstyled">
+				<li class="col-md-3" ng-repeat="r in ctrl.resumen">
+					<div class="thumbnail" style="padding: 0">
+						<div class="caption">
+							<h2>
+								<span ng-bind="r.candidato"></span>
+							</h2>
+						</div>
+						<div class="modal-footer" style="text-align: left"  ng-repeat="t in r.totales">
+							<div class="progress">
+								<div class="progress-bar" role="progressbar" aria-valuenow="10"
+									aria-valuemin="1" aria-valuemax="100"
+									ng-style="{'width': PromedioTask(r.totales, t) + '%'}"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-4">
+									<b><span ng-bind="t.total"></span></b><br /> <small><span ng-bind="t.taskState"></span></small>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box box-primary">
+					<div class="box-header with-border"></div>
+					<div class="box-body">
+						<table id="data-table" class="table table-borderd table.striped">
+							<thead>
+								<tr>
+									<th>Candidato</th>
+									<th
+										th:each="state : ${T(com.plenumsoft.vuzee.entities.TaskState).values()}"
+										th:text="${state}"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="r in ctrl.resumen">
+									<td><span ng-bind="r.candidato"></span></td>
+									<td ng-repeat="t in r.totales"><span ng-bind="t.total"></span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="box-footer"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<th:block layout:fragment="scripts">
+		<!-- <script th:src="@{/resources/angular2-build/angular2.js}"></script> -->
+		<script
+			src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.js"></script>
+
+		<script type="text/javascript">
+			var App = angular.module('myApp', []);
+		</script>
+
+		<script th:src="@{/js/service/dashBoardService.js}"></script>
+		<script th:src="@{/js/controller/dashBoardController.js}"></script>
+	</th:block>
+</body>
+</html>

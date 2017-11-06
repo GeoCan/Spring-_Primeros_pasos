@@ -1,0 +1,100 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Please Login</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<link th:href="@{/css/login.css}" rel="stylesheet" type="text/css" />
+
+<link th:href="@{/resources/bootstrap/dist/css/bootstrap.css}"
+	rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+	<div th:fragment="content">
+		<form name="f" th:action="@{/login}" method="post">
+			<div class="container">
+				<div class="login-container">
+
+					<div id="output"></div>
+					<div class="avatar"></div>
+					<div class="form-box">
+
+						<input type="text" id="username" name="username"
+							placeholder="Usuario" /> <input type="password" id="password"
+							name="password" placeholder="Contraseña" />
+						<div class="form-actions">
+							<button class="btn btn-info btn-block login" type="submit">Login</button>
+						</div>
+						<br />
+						<div th:if="${param.error}" class="alert alert-error alert-danger animated fadeInUp">Usuario/Contraseña invalido</div>
+						<div th:if="${param.logout}" class="alert alert-success">You
+							have been logged out.</div>
+					</div>
+
+				</div>
+			</div>
+		</form>
+	</div>
+	<script th:src="@{/resources/bootstrap/dist/js/bootstrap.min.js}"
+		type="text/javascript"></script>
+</body>
+</html>
+
+
+
+
+<!-- <html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Please Login</title>
+</head>
+<body>
+
+	<div th:fragment="content">
+		<form name="f" th:action="@{/login}" method="post">
+			<fieldset>
+				<legend>Please Login</legend>
+				<div th:if="${param.error}" class="alert alert-error">Invalid
+					username and password.</div>
+				<div th:if="${param.logout}" class="alert alert-success">You
+					have been logged out.</div>
+				<label for="username">Username</label> <input type="text"
+					id="username" name="username" /> <label for="password">Password</label>
+				<input type="password" id="password" name="password" />
+				<div class="form-actions">
+					<button type="submit" class="btn">Log in</button>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+</body>
+</html> -->
+
+
+
+<!-- <!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+    <head>
+        <title>Hello Spring Security</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}" />
+    </head>
+    <body>
+        <div th:fragment="logout" class="logout" sec:authorize="isAuthenticated()">		
+            Logged in user: <span sec:authentication="name"></span> |					
+            Roles: <span sec:authentication="principal.authorities"></span>				
+            <div>
+                <form action="#" th:action="@{/logout}" method="post">					
+                    <input type="submit" value="Logout" />
+                </form>
+            </div>
+        </div>
+        <h1>Hello Spring Security</h1>
+        <p>This is an unsecured page, but you can access the secured pages after authenticating.</p>
+        <ul>
+            <li>Go to the <a href="/user/index" th:href="@{/user/index}">secured pages</a></li>
+        </ul>
+    </body>
+</html> -->

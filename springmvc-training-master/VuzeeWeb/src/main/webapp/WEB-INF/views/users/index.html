@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/main">
+<head>
+<title>
+	Mysql Users
+</title>
+
+</head>
+<body>
+	<div layout:fragment="content">
+	<section class="content-header">
+		<h1>
+			Mysql Usuarios
+		</h1>
+	</section>
+	<div class="box">
+		<div class="box-header" > 
+			<h3 th:text="#{label.listado}"></h3>
+			<a class="btn btn-default pull-right"
+				th:href="@{/Usuario/create}"
+			>
+				<i class="ion-ios-plus"></i>
+				<label th:text="#{label.nuevo}"></label>
+			</a>
+		</div>
+		<div class="box-body" >
+			<table id="data-table" class="table table-bordered table-striped" >
+				<thead>
+					<tr>
+						<th>
+							<label th:text="#{label.id}"></label>
+						</th>
+						<th>
+							<label th:text="#{label.direccion}"></label>
+						</th>
+						<th>
+							<label th:text="#{label.email}" ></label>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="usuario : ${usuarios}">
+						<td th:text="${usuario.id}" ></td>
+						<td th:text="${usuario.address}" ></td>
+						<td th:text="${usuario.email}" ></td>
+					</tr>
+				</tbody>
+			</table>
+		
+		</div>
+		<div class="box-footer" ></div>
+	</div>
+	
+	</div>
+	
+	<th:block layout:fragment="scripts">
+	</th:block>
+</body>
+</html>
