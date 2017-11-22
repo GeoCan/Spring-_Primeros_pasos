@@ -2,3 +2,5 @@
  
 
 ahora de actualización
+
+puro eliminar y recuperar
